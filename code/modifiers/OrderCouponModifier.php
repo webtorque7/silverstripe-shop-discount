@@ -5,31 +5,32 @@
  */
 class OrderCouponModifier extends OrderModifier {
 
-	public static $has_one = array(
+	private static $has_one = array(
 		"Coupon" => "OrderCoupon"
 	);
 
-	public static $defaults = array(
+	private static $defaults = array(
 		"Type" => "Deductable"
 	);
 
-	public static $singular_name = "Coupon";
-	function i18n_singular_name() { return _t("OrderCouponModifier.ORDERCOUPONREDUCTION", self::$singular_name);}
+	private static $singular_name = "Coupon";
+	public function i18n_singular_name() { return _t("OrderCouponModifier.ORDERCOUPONREDUCTION", self::$singular_name);}
 
-	public static $plural_name = "Coupons";
-	function i18n_plural_name() { return _t("OrderCouponModifier.ORDERCOUPONREDUCTIONS", self::$plural_name);}
-	
+	private static $plural_name = "Coupons";
+	public function i18n_plural_name() { return _t("OrderCouponModifier.ORDERCOUPONREDUCTIONS", self::$plural_name);}
+
+	private static $default_sort = '"Created" DESC';
 	/**
 	 * @see OrderModifier::required()
 	 */
-	function required(){
+	public function required(){
 		return false;
 	}
 	
 	/**
 	 * Validate cart against coupon
 	 */
-	function valid(){
+	public function valid(){
 		$order = $this->Order();
 		if(!$order){
 			return false;
@@ -51,7 +52,7 @@ class OrderCouponModifier extends OrderModifier {
 	/**
 	 * @see OrderModifier::value()
 	 */
-	function value($incoming){
+	public function value($incoming){
 		if($coupon = $this->Coupon()){
 			$this->Amount = $coupon->orderDiscount($this->Order());
 		}
@@ -82,14 +83,15 @@ class OrderCouponModifier extends OrderModifier {
 	/**
 	* form functions (e. g. showform and getform)
 	*/
-	static function show_form() {
+	public static function show_form() {
 		return true;
 	}
 	
-	function getModifierForm($controller) {
-		return self::get_form();
+	public function getModifierForm($controller) {
+		return self::get_form($controller);
 	}
-	static function get_form($controller) {
+
+	public static function get_form($controller) {
 		return new CouponForm($controller,"CouponForm");
 	}
 	

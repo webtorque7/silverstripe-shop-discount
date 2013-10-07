@@ -5,7 +5,7 @@
  */
 class OrderCoupon extends DataObject {
 
-	static $db = array(
+	private static $db = array(
 		"Title" => "Varchar(255)", //store the promotion name, or whatever you like
 		"Code" => "Varchar(25)",
 		"Type" => "Enum('Percent,Amount','Percent')",
@@ -24,22 +24,22 @@ class OrderCoupon extends DataObject {
 		"EndDate" => "Datetime"
 	);
 	
-	static $has_one = array(
+	private static $has_one = array(
 		"GiftVoucher" => "GiftVoucher_OrderItem", //used to link to gift voucher purchase
 		"Group" => "Group"
 	);
 	
-	static $many_many = array(
+	private static $many_many = array(
 		"Products" => "Product", //for restricting to product(s)
 		"Categories" => "ProductCategory",
 		"Zones" => "Zone"
 	);
 
-	static $searchable_fields = array(
+	private static $searchable_fields = array(
 		"Code"
 	);
 
-	static $defaults = array(
+	private static $defaults = array(
 		"Type" => "Percent",
 		"Active" => true,
 		"UseLimit" => 0,
@@ -47,13 +47,13 @@ class OrderCoupon extends DataObject {
 		"ForItems" => 1
 	);
 	
-	static $field_labels = array(
+	private static $field_labels = array(
 		"DiscountNice" => "Discount",
 		"UseLimit" => "Maximum number of uses",
 		"MinOrderValue" => "Minimum subtotal of order"
 	);
 
-	static $summary_fields = array(
+	private static $summary_fields = array(
 		"Code",
 		"Title",
 		"DiscountNice",
@@ -61,15 +61,15 @@ class OrderCoupon extends DataObject {
 		"EndDate"
 	);
 
-	static $singular_name = "Discount";
-	function i18n_singular_name() { return _t("OrderCoupon.COUPON", "Coupon");}
-	static $plural_name = "Discounts";
-	function i18n_plural_name() { return _t("OrderCoupon.COUPONS", "Coupons");}
+	private static $singular_name = "Discount";
+	public function i18n_singular_name() { return _t("OrderCoupon.COUPON", "Coupon");}
+	private static $plural_name = "Discounts";
+	public function i18n_plural_name() { return _t("OrderCoupon.COUPONS", "Coupons");}
 
-	static $default_sort = "EndDate DESC, StartDate DESC";
-	static $code_length = 10;
+	private static $default_sort = "EndDate DESC, StartDate DESC";
+	private static $code_length = 10;
 
-	static function get_by_code($code){
+	public static function get_by_code($code){
 		return DataObject::get_one('OrderCoupon',"\"Code\" = UPPER('$code')");
 	}
 	
@@ -77,7 +77,7 @@ class OrderCoupon extends DataObject {
 	* Generates a unique code.
 	* @return string - new code
 	*/
-	static function generateCode($length = null){
+	public static function generate_code($length = null){
 		$length = ($length) ? $length : self::$code_length;
 		$code = null;
 		do{
@@ -89,24 +89,28 @@ class OrderCoupon extends DataObject {
 	protected $message = null, $messagetype = null;
 	
 	function getCMSFields($params = null){
-		$fields = new FieldSet(
-			new TextField("Title"),
-			new TextField("Code"),
-			new CheckboxField("Active","Active (allow this coupon to be used)"),
-			new FieldGroup("This discount applies to:",
-				new CheckboxField("ForItems","Item values"),
-				new CheckboxField("ForShipping","Shipping cost")
-			),
-			new HeaderField("Criteria","Order and Item Criteria",4),
-			new LabelField("CriteriaDescription", "Configure the requirements an order must meet for this coupon to be used with it:"),
+
+		$fields = new FieldList(
 			$tabset = new TabSet("Root",
 				$maintab = new Tab("Main",
-					new FieldGroup("Valid date range:",
-						new CouponDatetimeField("StartDate","Start Date / Time"),
-						new CouponDatetimeField("EndDate","End Date / Time (you should set the end time to 23:59:59, if you want to include the entire end day)")
-					),
-					new CurrencyField("MinOrderValue","Minimum order subtotal"),
-					new NumericField("UseLimit","Limit number of uses (0 = unlimited)")
+					new TextField("Title"),
+					new TextField("Code"),
+					new CheckboxField("Active","Active (allow this coupon to be used)"),
+					new FieldGroup("This discount applies to:",
+						new CheckboxField("ForItems","Item values"),
+						new CheckboxField("ForShipping","Shipping cost")
+					)
+				),
+				new Tab('OrderAndItems',
+						new HeaderField("Criteria","Order and Item Criteria",4),
+						new LabelField("CriteriaDescription", "Configure the requirements an order must meet for this coupon to be used with it:"),
+
+						new FieldGroup("Valid date range:",
+							new CouponDatetimeField("StartDate","Start Date / Time"),
+							new CouponDatetimeField("EndDate","End Date / Time (you should set the end time to 23:59:59, if you want to include the entire end day)")
+						),
+						new CurrencyField("MinOrderValue","Minimum order subtotal"),
+						new NumericField("UseLimit","Limit number of uses (0 = unlimited)")
 				)
 			)
 		);
@@ -114,18 +118,16 @@ class OrderCoupon extends DataObject {
 			if($this->ForItems){
 				$tabset->push(new Tab("Products",
 					new LabelField("ProductsDescription", "Select specific products that this coupon can be uesd with"),
-					$products = new ManyManyComplexTableField($this, "Products", "Product")
+					$products = new GridField('Products', 'Products', $this->Products(), GridFieldConfig_RelationEditor::create())
 				));
 				$tabset->push(new Tab("Categories",
 					new LabelField("CategoriesDescription", "Select specific product categories that this coupon can be uesd with"),
-					$categories = new ManyManyComplexTableField($this, "Categories", "ProductCategory")
+					$categories = new GridField("Categories", "Categories", $this->Categories(), GridFieldConfig_RelationEditor::create())
 				));
-				$products->setPermissions(array('show'));
-				$categories->setPermissions(array('show'));
 			}
 			
 			$tabset->push(new Tab("Zones",
-				$zones = new ManyManyComplexTableField($this, "Zones", "Zone")
+				$zones = new GridField("Zones", "Zones", $this->Zones(), GridFieldConfig_RelationEditor::create())
 			));
 			
 			$maintab->Fields()->push($grps = new DropdownField("GroupID", "Member Belongs to Group", DataObject::get('Group')->map('ID','Title')));
@@ -155,16 +157,11 @@ class OrderCoupon extends DataObject {
 		$this->extend("updateCMSFields",$fields);
 		return $fields;
 	}
-	
-	function populateDefaults() {
-		parent::populateDefaults();
-		$this->Code = self::generateCode();
-	}
-	
+
 	/*
 	 * Assign this coupon to a OrderCouponModifier on the given order
 	 */
-	function applyToOrder(Order $order){
+	public function applyToOrder(Order $order){
 		$modifier = $order->getModifier('OrderCouponModifier',true);
 		if($modifier){
 			$modifier->setCoupon($this);
@@ -182,7 +179,7 @@ class OrderCoupon extends DataObject {
 	 * Check if this coupon can be used with a given order
 	 * @return boolean
 	 */
-	function valid($order){
+	public function valid($order){
 		if(empty($order)){
 			$this->error(_t("OrderCoupon.NOORDER","Order has not been started."));
 			return false;
@@ -265,7 +262,7 @@ class OrderCoupon extends DataObject {
 	 * Work out the discount for a given order.
 	 * @return discount
 	 */
-	function orderDiscount(Order $order){
+	public function orderDiscount(Order $order){
 		$discount = 0;
 		if($this->ForItems){
 			$items = $order->Items();
@@ -297,7 +294,7 @@ class OrderCoupon extends DataObject {
 	 * @param OrderItem $item
 	 * @return boolean
 	 */
-	function itemMatchesCriteria(OrderItem $item){
+	public function itemMatchesCriteria(OrderItem $item){
 		$products = $this->Products();
 		if($products->exists()){
 			if(!$products->find('ID', $item->ProductID)){
@@ -321,7 +318,7 @@ class OrderCoupon extends DataObject {
 	 * @param float $subTotal
 	 * @return calculated discount
 	 */
-	function getDiscountValue($value){
+	public function getDiscountValue($value){
 		$discount = 0;
 		if($this->Amount) {
 			$discount += abs($this->Amount);
@@ -332,7 +329,7 @@ class OrderCoupon extends DataObject {
 		return $discount;
 	}
 	
-	function getDiscountNice(){
+	public function getDiscountNice(){
 		if($this->Type == "Percent"){
 			return $this->dbObject("Percent")->Nice();
 		}
@@ -344,36 +341,37 @@ class OrderCoupon extends DataObject {
 	* @param string $order - ignore this order when counting uses
 	* @return int
 	*/
-	function getUseCount($order = null) {
+	public function getUseCount($order = null) {
 		$filter = "\"Order\".\"Paid\" IS NOT NULL";
 		if($order){
-			$filter .= " AND \"OrderAttribute\".\"OrderID\" != ".$order->ID;
+			$filter .= " AND \"OrderAttribute\".\"OrderID\" <> ".$order->ID;
 		}
-		$join = "INNER JOIN \"Order\" ON \"OrderAttribute\".\"OrderID\" = \"Order\".\"ID\"";
+
 		$query = new SQLQuery("COUNT(\"OrderCouponModifier\")");
-		$query = singleton("OrderCouponModifier")->buildSQL("","","",$join);
-		$query->where = array($filter);
-		$query->select("OrderCouponModifier.ID");
+		$query->setFrom('OrderCouponModifier')
+			->addInnerJoin('OrderAttribute', "\"OrderAttribute\".\"ID\" = \"OrderCouponModifier\".\"ID\"")
+			->addInnerJoin('Order', "\"OrderAttribute\".\"OrderID\" = \"Order\".\"ID\"")
+			->where = array($filter);
 		return $query->unlimitedRowCount("\"OrderCouponModifier\".\"ID\"");
 	}
 	
 	/**
 	* Forces codes to be alpha-numeric, without spaces, and uppercase
 	*/
-	function setCode($code){
-		$code = eregi_replace("[^[:alnum:]]", " ", $code);
-		$code = trim(eregi_replace(" +", "", $code)); //gets rid of any white spaces
-		$this->setField("Code", strtoupper($code));
+	public function setCode($code){
+		//$code = eregi_replace("[^[:alnum:]]", " ", $code);
+		$code = trim(str_replace(' ', '', $code)); //gets rid of any white spaces
+		$this->setField("Code", $code);
 	}
 	
-	function canDelete($member = null) {
+	public function canDelete($member = null) {
 		if($this->getUseCount()) {
 			return false;
 		}
 		return true;
 	}
 
-	function canEdit($member = null) {
+	public function canEdit($member = null) {
 		//TODO: reintroduce this code, once table fields have been fixed to paginate in read-only state
 		/*if($this->getUseCount() && !$this->Active) {
 			return false;
@@ -390,11 +388,11 @@ class OrderCoupon extends DataObject {
 		$this->message($message, "bad");
 	}
 	
-	function getMessage(){
+	public function getMessage(){
 		return $this->message;
 	}
 	
-	function getMessageType(){
+	public function getMessageType(){
 		return $this->messagetype;
 	}
 

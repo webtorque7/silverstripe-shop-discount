@@ -1,0 +1,4 @@
+Product_OrderItem:
+  extensions:
+    - DiscountedOrderItem
+    - Product_OrderItem_Coupon

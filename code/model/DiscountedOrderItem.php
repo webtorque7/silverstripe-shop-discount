@@ -1,8 +1,8 @@
 <?php
 
-class DiscountedOrderItem extends DataObjectDecorator{
+class DiscountedOrderItem extends DataExtension {
 	
-	static $db = array(
+	private static $db = array(
 		'Discount' => 'Currency'
 	);
 	

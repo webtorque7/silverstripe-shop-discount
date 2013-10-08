@@ -26,7 +26,8 @@ class OrderCoupon extends DataObject {
 	
 	private static $has_one = array(
 		"GiftVoucher" => "GiftVoucher_OrderItem", //used to link to gift voucher purchase
-		"Group" => "Group"
+		"Group" => "Group",
+		"Member" => 'Member'
 	);
 	
 	private static $many_many = array(
@@ -58,7 +59,8 @@ class OrderCoupon extends DataObject {
 		"Title",
 		"DiscountNice",
 		"StartDate",
-		"EndDate"
+		"EndDate",
+		"Member.Name"
 	);
 
 	private static $singular_name = "Discount";
@@ -196,6 +198,26 @@ class OrderCoupon extends DataObject {
 			$this->error(sprintf(_t("OrderCouponModifier.MINORDERVALUE","Your cart subtotal must be at least %s to use this coupon"),$this->dbObject("MinOrderValue")->Nice()));
 			return false;
 		}
+
+		//check for previously using coupon
+		$modifier = OrderCouponModifier::get()
+			->innerJoin('Order', '"Order"."ID" = "OrderAttribute"."OrderID"')
+			->filter(array(
+				'CouponID' => $this->ID,
+				'MemberID' => Member::currentUserID()
+			))
+			->exclude('OrderID', $order->ID)->first();
+
+		if ($modifier) {
+			$this->error(sprintf(_t("OrderCouponModifier.ALREADYUSED","You have already used this coupon"),$this->dbObject("MinOrderValue")->Nice()));
+			return false;
+		}
+
+		if ($this->MemberID && $this->MemberID != Member::currentUserID()) {
+			$this->error(sprintf(_t("OrderCouponModifier.ALREADYUSED","You cannot use this coupon"),$this->dbObject("MinOrderValue")->Nice()));
+			return false;
+		}
+
 		$startDate = strtotime($this->StartDate);
 		$endDate = strtotime($this->EndDate);
 		$now = time();

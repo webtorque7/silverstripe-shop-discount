@@ -74,7 +74,12 @@ class OrderCoupon extends DataObject {
 	public static function get_by_code($code){
 		return DataObject::get_one('OrderCoupon',"\"Code\" = UPPER('$code')");
 	}
-	
+
+        public function onBeforeWrite() {
+                parent::onBeforeWrite();
+
+                if (!$this->Code) $this->Code = self::generate_code(8);
+        }
 	/**
 	* Generates a unique code.
 	* @return string - new code
@@ -84,7 +89,7 @@ class OrderCoupon extends DataObject {
 		$code = null;
 		do{
 			$code = strtoupper(substr(md5(microtime()),0,$length));
-		}while(DataObject::get('OrderCoupon',"\"Code\" = '$code'"));
+		}while(DataObject::get_one('OrderCoupon',"\"Code\" = '$code'"));
 		return $code;
 	}
 	

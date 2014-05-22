@@ -44,7 +44,7 @@ class GiftVoucherProduct extends Product{
 	public function calculateExpiryDate (){
 		$expiryDate = new SS_Datetime();
 		if($this->ValidDuration > 0){
-			$expiryDate = date('Y-m-d', strtotime('+' . $this->ValidDuration . ' month', strtotime(SS_Datetime::now()->getValue())));
+			$expiryDate = date('Y-m-d', strtotime('+' . $this->ValidDuration . ' month ' . '1 day', strtotime(SS_Datetime::now()->getValue())));
 		}
 		return $expiryDate;
 	}
@@ -144,8 +144,9 @@ class GiftVoucher_OrderItem extends Product_OrderItem{
 			"Type" => "Amount",
 			"Amount" => $this->UnitPrice,
 			"UseLimit" => 1,
-			"EndDate" => $this->Product()->calculateExpiryDate(),
-			"MinOrderValue" => $this->UnitPrice //safeguard that means coupons must be used entirely
+			"MinOrderValue" => $this->UnitPrice, //safeguard that means coupons must be used entirely
+			"StartDate" => date('Y-m-d', strtotime(SS_Datetime::now()->getValue())),
+			"EndDate" => $this->Product()->calculateExpiryDate()
 		));
 		$this->extend("updateCreateCoupon",$coupon);
 		$coupon->write();

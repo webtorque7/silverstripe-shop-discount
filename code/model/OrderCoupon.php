@@ -64,9 +64,9 @@ class OrderCoupon extends DataObject {
 	);
 
 	private static $singular_name = "Discount";
-	public function i18n_singular_name() { return _t("OrderCoupon.COUPON", "Coupon");}
 	private static $plural_name = "Discounts";
 	public function i18n_plural_name() { return _t("OrderCoupon.COUPONS", "Coupons");}
+	public function i18n_singular_name() { return _t("OrderCoupon.COUPON", "Coupon");}
 
 	private static $default_sort = "EndDate DESC, StartDate DESC";
 	private static $code_length = 10;
@@ -225,7 +225,7 @@ class OrderCoupon extends DataObject {
 
 		$startDate = strtotime($this->StartDate);
 		$endDate = strtotime($this->EndDate);
-		$now = time();
+		$now = SS_Datetime::now();
 		if($endDate && $endDate < $now){
 			$this->error(_t("OrderCoupon.EXPIRED","This coupon has already expired."));
 			return false;

@@ -4,48 +4,55 @@
  */
 class GiftVoucherProduct extends Product{
 	
-	static $db = array(
+	private static $db = array(
 		"VariableAmount" => "Boolean",
-		"MinimumAmount" => "Currency"
+		"MinimumAmount" => "Currency",
+		"ValidDuration" => "Int"
 	);
+
+	private static $order_item = "GiftVoucher_OrderItem";
+
+	private static $singular_name = "Gift Voucher";
+	private static $plural_name = "Gift Vouchers";
+	public function i18n_singular_name() { return _t("GiftVoucherProduct.SINGULAR", $this->stat('singular_name')); }
+	public function i18n_plural_name() { return _t("GiftVoucherProduct.PLURAL", $this->stat('plural_name')); }
 	
-	static $order_item = "GiftVoucher_OrderItem";
-	
-	public static $singular_name = "Gift Voucher";
-	function i18n_singular_name() { return _t("GiftVoucherProduct.SINGULAR", $this->stat('singular_name')); }
-	public static $plural_name = "Gift Vouchers";
-	function i18n_plural_name() { return _t("GiftVoucherProduct.PLURAL", $this->stat('plural_name')); }
-	
-	function getCMSFields(){
+	public function getCMSFields(){
 		$fields = parent::getCMSFields();
-		$fields->addFieldToTab("Root.Content.Pricing", 
+		$fields->addFieldToTab("Root.Pricing",
 			new OptionsetField("VariableAmount","Price",array(
 				0 => "Fixed",
 				1 => "Allow customer to choose"	
 			)),
 			"BasePrice"
 		);
-		$fields->addFieldsToTab("Root.Content.Pricing", array(
-			$minimumamount = new TextField("MinimumAmount","Minimum Amount") //text field, because of CMS js validation issue
-		));
+		$fields->addFieldToTab("Root.Pricing", new TextField("MinimumAmount","Minimum Amount"));
+		$fields->addFieldToTab('Root.ValidDuration', new TextField('ValidDuration', 'Valid duration in months'));
 		$fields->removeByName("CostPrice");
 		$fields->removeByName("Variations");
 		$fields->removeByName("Model");
 		return $fields;
 	}
-	
-	function canPurchase($member = null) {
+
+	public function canPurchase($member = null) {
 		if(!self::$global_allow_purchase) return false;
 		if(!$this->dbObject('AllowPurchase')->getValue()) return false;
 		if(!$this->isPublished()) return false;
 		return true;
 	}
-	
+
+	public function calculateExpiryDate (){
+		$expiryDate = new SS_Datetime();
+		if($this->ValidDuration > 0){
+			$expiryDate = date('Y-m-d', strtotime('+' . $this->ValidDuration . ' month', strtotime(SS_Datetime::now()->getValue())));
+		}
+		return $expiryDate;
+	}
 }
 
 class GiftVoucherProduct_Controller extends Product_Controller{
-	
-	function Form(){
+
+	public function Form(){
 		$form = parent::Form();
 		if($this->VariableAmount){
 			$form->setSaveableFields(array(
@@ -63,8 +70,8 @@ class GiftVoucherProduct_Controller extends Product_Controller{
 }
 
 class GiftVoucherFormValidator extends RequiredFields{
-	
-	function php($data){
+
+	public function php($data){
 		$valid =  parent::php($data);
 		if($valid){
 			$controller = $this->form->Controller();			
@@ -87,22 +94,22 @@ class GiftVoucherFormValidator extends RequiredFields{
 
 class GiftVoucher_OrderItem extends Product_OrderItem{
 	
-	static $db = array(
+	private static $db = array(
 		"GiftedTo" => "Varchar"
 	);
-	
-	static $has_many = array(
+
+	private static $has_many = array(
 		"Coupons" => "OrderCoupon"
 	);
-	
-	static $required_fields = array(
+
+	private static $required_fields = array(
 		"UnitPrice"	
 	);
 	
 	/**
 	 * Don't get unit price from product
 	 */
-	function UnitPrice() {
+	public function UnitPrice() {
 		if($this->Product()->VariableAmount){
 			return $this->UnitPrice;
 		}
@@ -112,7 +119,7 @@ class GiftVoucher_OrderItem extends Product_OrderItem{
 	/**
 	 * Create vouchers on order payment success event
 	 */
-	function onPayment(){
+	public function onPayment(){
 		parent::onPayment();
 		if($this->Coupons()->Count() < $this->Quantity){
 			$remaining = $this->Quantity - $this->Coupons()->Count();
@@ -128,7 +135,7 @@ class GiftVoucher_OrderItem extends Product_OrderItem{
 	 * Create a new coupon, based on this orderitem
 	 * @return OrderCoupon
 	 */
-	function createCoupon(){
+	public function createCoupon(){
 		if(!$this->Product()){
 			return false;
 		}
@@ -137,18 +144,19 @@ class GiftVoucher_OrderItem extends Product_OrderItem{
 			"Type" => "Amount",
 			"Amount" => $this->UnitPrice,
 			"UseLimit" => 1,
+			"EndDate" => $this->Product()->calculateExpiryDate(),
 			"MinOrderValue" => $this->UnitPrice //safeguard that means coupons must be used entirely
 		));
-		$this->extend("updateCreateCupon",$coupon);
+		$this->extend("updateCreateCoupon",$coupon);
 		$coupon->write();
 		$this->Coupons()->add($coupon);
 		return $coupon;
 	}
 	
-	/*
+	/**
 	 * Send the voucher to the appropriate email
 	 */
-	function sendVoucher(OrderCoupon $coupon){
+	public function sendVoucher(OrderCoupon $coupon){
 		$from = Email::getAdminEmail();
 		$to = $this->Order()->getLatestEmail();
 		$subject = _t("Order.GIFTVOUCHERSUBJECT", "Gift voucher");
@@ -159,5 +167,4 @@ class GiftVoucher_OrderItem extends Product_OrderItem{
 		));
 		return $email->send();
 	}
-	
 }

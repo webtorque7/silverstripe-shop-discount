@@ -1,4 +1,6 @@
-<p>Here is your gift voucher</p>
+<h1>Here is your gift voucher</h1>
+
+<h3>$Subject</h3>
 
 <% with $Coupon %>
 <div class="giftvoucher" style="padding:10px; font-size:2em;">

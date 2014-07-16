@@ -34,7 +34,7 @@ class GiftVoucherProduct extends Product{
 		return $fields;
 	}
 
-	public function canPurchase($member = null) {
+	public function canPurchase($member = NULL, $quantity = 1) {
 		if(!self::$global_allow_purchase) return false;
 		if(!$this->dbObject('AllowPurchase')->getValue()) return false;
 		if(!$this->isPublished()) return false;

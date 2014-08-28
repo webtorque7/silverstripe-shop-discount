@@ -31,11 +31,14 @@ class GiftVoucherProduct extends Product{
 		$fields->removeByName("CostPrice");
 		$fields->removeByName("Variations");
 		$fields->removeByName("Model");
+		$fields->removebyName('FoodMatches');
+		$fields->removebyName('Accolades');
+		$fields->removebyName('TastingNotes');
 		return $fields;
 	}
 
 	public function canPurchase($member = NULL, $quantity = 1) {
-		if(!self::$global_allow_purchase) return false;
+		if(!self::config()->global_allow_purchase) return false;
 		if(!$this->dbObject('AllowPurchase')->getValue()) return false;
 		if(!$this->isPublished()) return false;
 		return true;

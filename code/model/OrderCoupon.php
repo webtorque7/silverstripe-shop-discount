@@ -225,7 +225,8 @@ class OrderCoupon extends DataObject {
 
 		$startDate = strtotime($this->StartDate);
 		$endDate = strtotime($this->EndDate);
-		$now = SS_Datetime::now();
+		$now = strtotime(SS_Datetime::now());
+
 		if($endDate && $endDate < $now){
 			$this->error(_t("OrderCoupon.EXPIRED","This coupon has already expired."));
 			return false;

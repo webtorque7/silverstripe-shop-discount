@@ -16,8 +16,8 @@ class CouponsModelAdmin extends ModelAdmin {
 	}
 	public static function add_managed_model($item) {self::$managed_models[] = $item;}
 
-	private static $url_segment = 'coupons';
-	private static $menu_title = 'Coupons';
+	private static $url_segment = 'vouchers';
+	private static $menu_title = 'Vouchers';
 
 	private static $model_importers = array(
 		'Product' => 'CouponBulkLoader',

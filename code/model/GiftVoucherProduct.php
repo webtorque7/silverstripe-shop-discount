@@ -5,9 +5,10 @@
 class GiftVoucherProduct extends Product{
 	
 	private static $db = array(
-		"VariableAmount" => "Boolean",
+//		"VariableAmount" => "Boolean",
 		"MinimumAmount" => "Currency",
-		"ValidDuration" => "Int"
+		"ValidDuration" => "Int",
+		"ValidUseLimit" => "Int"
 	);
 
 	private static $order_item = "GiftVoucher_OrderItem";
@@ -19,17 +20,20 @@ class GiftVoucherProduct extends Product{
 	
 	public function getCMSFields(){
 		$fields = parent::getCMSFields();
-		$fields->addFieldToTab("Root.Pricing",
-			new OptionsetField("VariableAmount","Price",array(
-				0 => "Fixed",
-				1 => "Allow customer to choose"	
-			)),
-			"BasePrice"
-		);
-		$fields->addFieldToTab("Root.Pricing", new TextField("MinimumAmount","Minimum Amount"));
-		$fields->addFieldToTab('Root.ValidDuration', new TextField('ValidDuration', 'Valid duration in months'));
+//		$fields->addFieldToTab("Root.Pricing",
+//			new OptionsetField("VariableAmount","Price",array(
+//				0 => "Fixed",
+//				1 => "Allow customer to choose"
+//			)),
+//			"BasePrice"
+//		);
+		$fields->addFieldToTab("Root.Pricing", TextField::create("MinimumAmount","Minimum Amount")->setDescription('Minimum spending amount to become eligible to use this voucher.'));
+		$fields->addFieldsToTab('Root.VoucherValidation', array(
+			TextField::create('ValidDuration', 'Valid duration in months'),
+			TextField::create('ValidUseLimit', 'Valid use limit')->setDescription('Set this to 0 for unlimited use limit.')
+		));
 		$fields->removeByName("CostPrice");
-		$fields->removeByName("Variations");
+//		$fields->removeByName("Variations");
 		$fields->removeByName("Model");
 		$fields->removebyName('FoodMatches');
 		$fields->removebyName('Accolades');
@@ -146,8 +150,8 @@ class GiftVoucher_OrderItem extends Product_OrderItem{
 			"Title" => $this->Product()->Title,
 			"Type" => "Amount",
 			"Amount" => $this->UnitPrice,
-			"UseLimit" => 1,
-			"MinOrderValue" => $this->UnitPrice, //safeguard that means coupons must be used entirely
+			"UseLimit" => $this->Product()->ValidUseLimit,
+			"MinOrderValue" => $this->Product()->MinimumAmount, //safeguard that means coupons must be used entirely
 			"StartDate" => date('Y-m-d', strtotime(SS_Datetime::now()->getValue())),
 			"EndDate" => $this->Product()->calculateExpiryDate()
 		));

@@ -382,7 +382,25 @@ class OrderCoupon extends DataObject {
 			->where = array($filter);
 		return $query->unlimitedRowCount("\"OrderCouponModifier\".\"ID\"");
 	}
-	
+
+	public function updateVoucher($couponModifier){
+		$amountUsed = $couponModifier->Amount;
+		if($amountUsed >= $this->Amount){
+			$this->Active = false;
+			$this->write();
+		}
+		else{
+			$this->Amount -= $amountUsed;
+			$this->UseLimit -= 1;
+			$this->write();
+			if($this->UseLimit <= 0){
+				$this->Active = false;
+				$this->write();
+			}
+		}
+
+	}
+
 	/**
 	* Forces codes to be alpha-numeric, without spaces, and uppercase
 	*/

@@ -167,7 +167,11 @@ class GiftVoucher_OrderItem extends Product_OrderItem{
 	public function sendVoucher(OrderCoupon $coupon){
 		$subject = _t("Order.GIFTVOUCHERSUBJECT", "Gift voucher");
 		$email = new Generic_Email();
-		$email->setTo($this->Order()->getLatestEmail());
+		$emailAddress = $this->Order()->getLatestEmail();
+		if(!empty($coupon->GiftVoucher()->FriendsEmail)){
+			$emailAddress = $coupon->GiftVoucher()->FriendsEmail;
+		}
+		$email->setTo($emailAddress);
 		$email->setFrom(SiteConfig::current_site_config()->ShopEmailTo);
 		$email->setTemplate("GiftVoucherEmail");
 		$email->populateTemplate(array(

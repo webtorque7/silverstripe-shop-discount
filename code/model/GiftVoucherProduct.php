@@ -48,6 +48,10 @@ class GiftVoucherProduct extends Product{
 		return true;
 	}
 
+	public function VariationForm(){
+		return VariationForm::create(Controller::curr());
+	}
+
 	public function calculateExpiryDate (){
 		$expiryDate = new SS_Datetime();
 		if($this->ValidDuration > 0){
@@ -55,9 +59,23 @@ class GiftVoucherProduct extends Product{
 		}
 		return $expiryDate;
 	}
+
+	public function StockAmount(){
+		$stock = $this->StockAmount;
+		if($this->HasVariation()){
+		}
+		return $stock;
+	}
 }
 
 class GiftVoucherProduct_Controller extends Product_Controller{
+	private static $allowed_actions = array(
+		'VariationForm'
+	);
+
+	public function VariationForm(){
+		return VariationForm::create($this);
+	}
 
 	public function Form(){
 		$form = parent::Form();

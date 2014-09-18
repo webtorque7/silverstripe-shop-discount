@@ -93,7 +93,7 @@
 
 						<% with $Coupon %>
 							<table width="100%" style="background: white; text-align: center; color: #ae8346; margin: 20px 0 16px 0;">
-								<tr style="font-size: 24px; font-weight: normal;"><td>$Member.FirstName has sent you a<br>$Title</td></tr>
+								<tr style="font-size: 24px; font-weight: normal;"><td>$CurrentMember.FirstName has sent you a<br>$Title</td></tr>
 								<tr><td style="padding-top: 8px;">- $Top.TimeStamp -</td></tr>
 							</table>
 

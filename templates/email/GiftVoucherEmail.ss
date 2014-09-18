@@ -91,21 +91,19 @@
 							<tr height="30" style="text-align: center; text-transform: uppercase; font-weight: 300; font-size: 15px;"><td>Good Wine &middot; Good Food &middot; Good Living</td></tr>
 						</table>
 
-						<% with $order %>
-							<table width="100%" style="background: white; text-align: center; color: #ae8346; margin: 20px 0 16px 0;">
-								<tr style="font-size: 24px; font-weight: normal;"><td>$Member.FirstName has sent you a<br>$Subject</td></tr>
-								<tr><td style="padding-top: 8px;">- $ReceiptDate -</td></tr>
-							</table>
-						<% end_with %>
-
 						<% with $Coupon %>
+							<table width="100%" style="background: white; text-align: center; color: #ae8346; margin: 20px 0 16px 0;">
+								<tr style="font-size: 24px; font-weight: normal;"><td>$Member.FirstName has sent you a<br>$Title</td></tr>
+								<tr><td style="padding-top: 8px;">- $Top.TimeStamp -</td></tr>
+							</table>
+
 							<table width="550" style="background: #ffffff; margin: 0 auto; text-align: center;">
 								<tr style="border-top: 1px dotted #ac824c; border-bottom: 1px dotted #ac824c;">
 									<td style="padding: 18px 0;">
 										<table width="100%">
 											<% if $GiftVoucher.GiftNotes %>
 												<tr>
-													<td style="line-height: 19px;">$GiftNotes</td>
+													<td style="line-height: 19px;">$GiftVoucher.GiftNotes</td>
 												</tr>
 											<% end_if %>
 											<tr>

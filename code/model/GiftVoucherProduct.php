@@ -8,7 +8,8 @@ class GiftVoucherProduct extends Product{
 //		"VariableAmount" => "Boolean",
 		"MinimumAmount" => "Currency",
 		"ValidDuration" => "Int",
-		"ValidUseLimit" => "Int"
+		"ValidUseLimit" => "Int",
+		"UseConditions" => "Varchar(250)"
 	);
 
 	private static $order_item = "GiftVoucher_OrderItem";
@@ -27,6 +28,7 @@ class GiftVoucherProduct extends Product{
 //			)),
 //			"BasePrice"
 //		);
+		$fields->addFieldToTab('Root.Main', TextareaField::create('UseConditions', 'Usage Conditions')->setDescription('Conditions text will be displayed in the voucher email'), 'Content');
 		$fields->addFieldToTab("Root.Pricing", TextField::create("MinimumAmount","Minimum Amount")->setDescription('Minimum spending amount to become eligible to use this voucher.'));
 		$fields->addFieldsToTab('Root.VoucherValidation', array(
 			TextField::create('ValidDuration', 'Valid duration in months'),

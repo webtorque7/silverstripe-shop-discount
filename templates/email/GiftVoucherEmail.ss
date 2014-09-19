@@ -98,8 +98,8 @@
 							</table>
 
 							<table width="550" style="background: #ffffff; margin: 0 auto; text-align: center;">
-								<tr style="border-top: 1px dotted #ac824c; border-bottom: 1px dotted #ac824c;">
-									<td style="padding: 18px 0;">
+								<tr>
+									<td style="border-top: 1px dotted #ac824c; border-bottom: 1px dotted #ac824c; padding: 18px 0;">
 										<table width="100%">
 											<% if $GiftVoucher.GiftNotes %>
 												<tr>
@@ -113,13 +113,13 @@
 												<td style="padding: 8px 0 18px 0;">Your gift voucher code: $Code</td>
 											</tr>
 											<tr>
-												<td><a href="$Top.ShopHome.Link" style="font-weight: bold; font-size: 12px; background: url(/mysite/images/arrow_right.png) no-repeat right center #1e1e1e; text-transform: uppercase; color: #fff; padding: 6px 26px 6px 8px; display: inline-block;">Shop now</a></td>
+												<td><a href="$Top.ShopHome.Link" style="text-decoration: none; font-weight: bold; font-size: 12px; background: url(/mysite/images/arrow_right.png) no-repeat right center #1e1e1e; text-transform: uppercase; color: #fff; padding: 6px 26px 6px 8px; display: inline-block;">Shop now</a></td>
 											</tr>
 										</table>
 									</td>
 								</tr>
-								<tr style="border-top: 1px dotted #ac824c; border-bottom: 1px dotted #ac824c;">
-									<td style="padding: 10px 0 18px 0;">
+								<tr>
+									<td style="border-bottom: 1px dotted #ac824c; padding: 10px 0 18px 0;">
 										<table width="100%">
 											<tr style="font-size: 24px; color: #ae8346;">
 												<td>What can I buy?</td>
@@ -139,22 +139,22 @@
 
 								<tr style="text-align: center;">
 									<td>
-										<table width="100%" style="margin: 20px 0 22px 0; text-align: center; text-transform: uppercase; font-size: 16px; color: #ae8346;">
-											<tr>
-												<td width="20%">&nbsp;</td>
-												<td width="20%"><img src="/mysite/images/basket.png" alt="Shop"/></td>
-												<td width="20%"><img src="/mysite/images/grape.png" alt="Visit"/></td>
-												<td width="20%"><img src="/mysite/images/bottle.png" alt="Join"/></td>
-												<td width="20%">&nbsp;</td>
-											</tr>
-											<tr style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346;">
-												<td width="20%" style="padding: 7px 0;">&nbsp;</td>
-												<td width="20%" style="padding: 7px 0;">Shop</td>
-												<td width="20%" style="padding: 7px 0;">Visit</td>
-												<td width="20%" style="padding: 7px 0;">Join</td>
-												<td width="20%" style="padding: 7px 0;">&nbsp;</td>
-											</tr>
-										</table>
+                                        <table width="100%" style="border-spacing: 0; margin: 10px 0 22px 0; text-align: center; text-transform: uppercase; font-size: 16px; color: #ae8346;">
+                                            <tr>
+                                                <td width="20%">&nbsp;</td>
+                                                <td width="20%"><img src="/mysite/images/basket.png" alt="Shop"/></td>
+                                                <td width="20%"><img src="/mysite/images/grape.png" alt="Visit"/></td>
+                                                <td width="20%"><img src="/mysite/images/bottle.png" alt="Join"/></td>
+                                                <td width="20%">&nbsp;</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="20%" style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;">&nbsp;</td>
+                                                <td width="20%" style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;">Shop</td>
+                                                <td width="20%" style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;">Visit</td>
+                                                <td width="20%" style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;">Join</td>
+                                                <td width="20%" style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;">&nbsp;</td>
+                                            </tr>
+                                        </table>
 									</td>
 								</tr>
 							</table>

@@ -33,7 +33,7 @@ class GiftVoucherProduct extends Product{
 			TextField::create('ValidUseLimit', 'Valid use limit')->setDescription('Set this to 0 for unlimited use limit.')
 		));
 		$fields->removeByName("CostPrice");
-//		$fields->removeByName("Variations");
+		$fields->removeByName("Variations");
 		$fields->removeByName("Model");
 		$fields->removebyName('FoodMatches');
 		$fields->removebyName('Accolades');

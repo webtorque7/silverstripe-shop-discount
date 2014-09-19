@@ -163,17 +163,21 @@
 				</tr>
 				<tr>
 					<td>
-						<table width="100%" style="background: #f9f6f2; text-align: center;">
-							<tr height="47" style="font-size: 11px;">
-								<td style="padding-top: 20px;">
-									<span><span style="margin-right: 10px; background-image: url(/mysite/images/phone.png); background-repeat: no-repeat; background-position: left center; padding: 7px 0 7px 32px;">+64 3 442 6910</span></span>
-									<span><span style="margin-right: 10px; background-image: url(/mysite/images/email.png); background-repeat: no-repeat; background-position: left center; padding: 7px 0 7px 32px;">info@gibbstonvalleynz.com</span></span>
-								</td>
-							</tr>
-							<tr height="47" style="font-size: 9px;">
-								<td style="padding-bottom: 10px;">Gibbston Valley Winery | 1820 State Highway 6, Queenstown, New Zealand 9371</td>
-							</tr>
-						</table>
+                        <table width="100%" style="background: #f9f6f2; text-align: center;">
+                            <tr height="47" style="font-size: 11px;">
+                                <td style="padding-top: 20px;">
+									<span><span style="margin-right: 10px; background-image: url(/mysite/images/phone.png); background-repeat: no-repeat; background-position: left center; padding: 7px 0 7px 32px;">
+                                        <a href="tel:%2B64%203%20442%206910" value="+6434426910" target="_blank" style="font-size: 11px; text-decoration: none; color: #1e1e1e;">+64 3 442 6910</a>
+									</span></span>
+									<span><span style="margin-right: 10px; background-image: url(/mysite/images/email.png); background-repeat: no-repeat; background-position: left center; padding: 7px 0 7px 32px;">
+                                        <a href="mailto:info@gibbstonvalleynz.com" target="_blank" style="font-size: 11px; text-decoration: none; color: #1e1e1e;">info@gibbstonvalleynz.com</a>
+									</span></span>
+                                </td>
+                            </tr>
+                            <tr height="47" style="font-size: 9px;">
+                                <td style="padding-bottom: 10px;">Gibbston Valley Winery | 1820 State Highway 6, Queenstown, New Zealand 9371</td>
+                            </tr>
+                        </table>
 					</td>
 				</tr>
 			</table>

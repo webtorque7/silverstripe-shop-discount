@@ -80,7 +80,7 @@
 						<table cellpadding="0" cellspacing="0" border="0" align="center" style="background: #4c4d4f;" >
 							<tr>
                                 <td width="768" height="119" style="background: #1e1e1e; text-align: center;">
-									<a href="" target="_blank">
+									<a href="/" target="_blank">
 										<img class="image_fix" src="/mysite/images/gibbston-valley-email-logo.png" alt="Gibbston Valley email banner image" title="Gibbston Valley" style="margin: 0 auto;"/>
 									</a>
 								</td>

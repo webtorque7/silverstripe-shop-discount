@@ -9,10 +9,17 @@ class GiftVoucherProduct extends Product{
 		"MinimumAmount" => "Currency",
 		"ValidDuration" => "Int",
 		"ValidUseLimit" => "Int",
-		"UseConditions" => "Varchar(250)"
+		"UseConditions" => "Varchar(250)",
+
+		'ProductDetailLeft' => 'HTMLText',
+		'ProductDetailRight' => 'HTMLText'
 	);
 
 	private static $order_item = "GiftVoucher_OrderItem";
+
+	private static $many_many = array(
+		'RelatedProducts' => 'Product'
+	);
 
 	private static $singular_name = "Gift Voucher";
 	private static $plural_name = "Gift Vouchers";
@@ -34,6 +41,15 @@ class GiftVoucherProduct extends Product{
 			TextField::create('ValidDuration', 'Valid duration in months'),
 			TextField::create('ValidUseLimit', 'Valid use limit')->setDescription('Set this to 0 for unlimited use limit.')
 		));
+
+		$fields->addFieldsToTab('Root.Main', array(
+			HtmlEditorField::create('ProductDetailLeft', 'Product details tab - left')->setRows(20),
+			HtmlEditorField::create('ProductDetailRight', 'Product details tab - right')->setRows(20)
+		),'Metadata');
+		$fields->addFieldsToTab('Root.Related', array(
+			GridField::create('RelatedProducts', 'Related Products', $this->owner->RelatedProducts(), GridFieldConfig_RelationEditor::create()->addComponent(new GridFieldAddExistingSearchButton()))
+		));
+
 		$fields->removeByName("CostPrice");
 		$fields->removeByName("Variations");
 		$fields->removeByName("Model");

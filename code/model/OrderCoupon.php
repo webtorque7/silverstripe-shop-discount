@@ -138,7 +138,7 @@ class OrderCoupon extends DataObject {
 			));
 			
 			$maintab->Fields()->push($grps = new DropdownField("GroupID", "Member Belongs to Group", DataObject::get('Group')->map('ID','Title')));
-			$grps->setHasEmptyDefault(true);
+			$grps->setHasEmptyDefault(true)->setEmptyString('Select a group');
 			
 			if($this->Type == "Percent"){
 				$fields->insertBefore($percent = new NumericField("Percent","Percentage discount"), "Active");

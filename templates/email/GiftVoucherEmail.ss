@@ -137,26 +137,67 @@
 									</td>
 								</tr>
 
-								<tr style="text-align: center;">
-									<td>
-                                        <table width="100%" style="border-spacing: 0; margin: 10px 0 22px 0; text-align: center; text-transform: uppercase; font-size: 16px; color: #ae8346;">
+                                <tr style="text-align: center;">
+                                    <td>
+                                        <table width="100%"
+                                               style="border-spacing: 0; margin: 10px 0 22px 0; text-align: center; text-transform: uppercase; font-size: 16px; color: #ae8346;">
                                             <tr>
                                                 <td width="20%">&nbsp;</td>
-                                                <td width="20%"><img src="/mysite/images/basket.png" alt="Shop"/></td>
-                                                <td width="20%"><img src="/mysite/images/grape.png" alt="Visit"/></td>
-                                                <td width="20%"><img src="/mysite/images/bottle.png" alt="Join"/></td>
+                                                <td width="20%">
+                                                    <% if $Top.MessageConfig.EmailFooterShopLink %>
+                                                        <a style="color: #ae8346;text-decoration: none;" href="$Top.MessageConfig.EmailFooterShopLink.Link">
+                                                            <img src="/mysite/images/basket.png" alt="Shop"/>
+                                                        </a>
+                                                    <% else %>
+                                                        <img src="/mysite/images/basket.png" alt="Shop"/>
+                                                    <% end_if %>
+                                                </td>
+                                                <td width="20%">
+                                                    <% if $Top.MessageConfig.EmailFooterVisitLink %>
+                                                        <a style="color: #ae8346;text-decoration: none;" href="$Top.MessageConfig.EmailFooterVisitLink.Link">
+                                                            <img src="/mysite/images/grape.png" alt="Visit"/>
+                                                        </a>
+                                                    <% else %>
+                                                        <img src="/mysite/images/grape.png" alt="Visit"/>
+                                                    <% end_if %>
+                                                </td>
+                                                <td width="20%">
+                                                    <% if $Top.MessageConfig.EmailFooterJoinLink %>
+                                                        <a style="color: #ae8346;text-decoration: none;" href="$Top.MessageConfig.EmailFooterJoinLink.Link">
+                                                            <img src="/mysite/images/bottle.png" alt="Join"/>
+                                                        </a>
+                                                    <% else %>
+                                                        <img src="/mysite/images/bottle.png" alt="Join"/>
+                                                    <% end_if %>
+                                                </td>
                                                 <td width="20%">&nbsp;</td>
                                             </tr>
                                             <tr>
-                                                <td width="20%" style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;">&nbsp;</td>
-                                                <td width="20%" style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;">Shop</td>
-                                                <td width="20%" style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;">Visit</td>
-                                                <td width="20%" style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;">Join</td>
-                                                <td width="20%" style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;">&nbsp;</td>
+                                                <td width="20%"
+                                                    style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;">
+                                                    &nbsp;</td>
+                                                <td width="20%"
+                                                    style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;"><% if $Top.MessageConfig.EmailFooterShopLink %>
+                                                    <a style="color: #ae8346;text-decoration: none;"
+                                                       href="$Top.MessageConfig.EmailFooterShopLink.Link">Shop</a><% else %>
+                                                    Shop<% end_if %></td>
+                                                <td width="20%"
+                                                    style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;"><% if $Top.MessageConfig.EmailFooterVisitLink %>
+                                                    <a style="color: #ae8346;text-decoration: none;"
+                                                       href="$Top.MessageConfig.EmailFooterVisitLink.Link">Visit</a><% else %>
+                                                    Visit<% end_if %></td>
+                                                <td width="20%"
+                                                    style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;"><% if $Top.MessageConfig.EmailFooterJoinLink %>
+                                                    <a style="color: #ae8346;text-decoration: none;"
+                                                       href="$Top.MessageConfig.EmailFooterJoinLink.Link">Join</a><% else %>
+                                                    Join<% end_if %></td>
+                                                <td width="20%"
+                                                    style="border-top: 2px solid #ae8346; border-bottom: 2px solid #ae8346; padding: 7px 0;">
+                                                    &nbsp;</td>
                                             </tr>
                                         </table>
-									</td>
-								</tr>
+                                    </td>
+                                </tr>
 							</table>
 					    	<% end_with %>
 					</td>

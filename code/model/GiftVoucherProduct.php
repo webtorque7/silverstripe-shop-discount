@@ -202,6 +202,7 @@ class GiftVoucher_OrderItem extends Product_OrderItem{
 	 */
 	public function sendVoucher(OrderCoupon $coupon){
 		$subject = MessageConfig::current_message_config()->VoucherEmailSubject;
+                $content = MessageConfig::current_message_config()->dbObject('VoucherEmailContent');
 		if (!$subject) $subject = _t("Order.GIFTVOUCHERSUBJECT", "Gift voucher");
 
 		$email = new Generic_Email();
@@ -215,6 +216,7 @@ class GiftVoucher_OrderItem extends Product_OrderItem{
 		$email->setTemplate("GiftVoucherEmail");
 		$email->populateTemplate(array(
 			'Subject' => $subject,
+                        'Content' => $content,
 			'Coupon' => $coupon,
 			'Order' => $this->Order()
 		));

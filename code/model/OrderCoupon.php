@@ -136,10 +136,13 @@ class OrderCoupon extends DataObject {
 			$tabset->push(new Tab("Zones",
 				$zones = new GridField("Zones", "Zones", $this->Zones(), GridFieldConfig_RelationEditor::create())
 			));
-			
-			$maintab->Fields()->push($grps = new DropdownField("GroupID", "Member Belongs to Group", DataObject::get('Group')->map('ID','Title')));
+
+//            $maintab->Fields()->push(OptionsetField::create('Type', 'Type', $this->dbObject('Type')->enumValues()));
+
+            $maintab->Fields()->push($grps = new DropdownField("GroupID", "Member Belongs to Group", DataObject::get('Group')->map('ID','Title')));
 			$grps->setHasEmptyDefault(true);
-			
+            $grps->setEmptyString('Select a Group');
+
 			if($this->Type == "Percent"){
 				$fields->insertBefore($percent = new NumericField("Percent","Percentage discount"), "Active");
 				$percent->setTitle("Percent discount (eg 0.05 = 5%, 0.5 = 50%, and 5 = 500%)");

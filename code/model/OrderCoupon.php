@@ -20,6 +20,7 @@ class OrderCoupon extends DataObject {
 		//"Cumulative" => "Boolean",
 		"MinOrderValue" => "Currency",
 		"UseLimit" => "Int",
+		"MultipleUsePerMember" => "Boolean",
 		"StartDate" => "Datetime",
 		"EndDate" => "Datetime"
 	);
@@ -117,7 +118,8 @@ class OrderCoupon extends DataObject {
 							new CouponDatetimeField("EndDate","End Date / Time (you should set the end time to 23:59:59, if you want to include the entire end day)")
 						),
 						new CurrencyField("MinOrderValue","Minimum order subtotal"),
-						new NumericField("UseLimit","Limit number of uses (0 = unlimited)")
+						new NumericField("UseLimit","Limit number of uses (0 = unlimited)"),
+						CheckboxField::create("MultipleUsePerMember","Multiple Use Per User")->setDescription('If use limit is turned off or is greater than 1 it means this coupon can be used multiple times by different users but only once per user, this option allows multiple uses per user.')
 				)
 			)
 		);
@@ -216,7 +218,7 @@ class OrderCoupon extends DataObject {
 			))
 			->exclude('OrderID', $order->ID)->first();
 
-		if ($modifier) {
+		if (!$this->MultipleUsePerMember && $modifier) {
 			$this->error(sprintf(_t("OrderCouponModifier.ALREADYUSED","You have already used this coupon"),$this->dbObject("MinOrderValue")->Nice()));
 			return false;
 		}
